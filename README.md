@@ -133,7 +133,94 @@ Base URL: `http://localhost:4000/api`
 3. Configure env files in frontend and backend.
 4. In Supabase Auth settings, enable email/password sign-in.
 
-## Run locally
+## Stack
+
+- **Frontend:** React + TypeScript + Vite
+- **Backend:** Node.js + Express + TypeScript
+- **Database:** Supabase (PostgreSQL)
+- **Auth:** School email gate (header-based demo flow; ready to swap to Supabase Auth / Google OAuth)
+- **UI:** Mobile-first, responsive cards, dark/light mode
+
+## Core capabilities implemented
+
+1. Restroom status and student issue reporting (including optional photo URL)
+2. Clubs discovery and follow controls
+3. Campus news feed (announcements/events/alerts)
+4. Drill and emergency instruction endpoint (offline-cache friendly response shape)
+5. Interactive map location API + searchable UI scaffold
+6. Courses & academics section in dashboard
+7. Student guide tips section
+8. Moderated forum feed scaffold with reporting language
+9. Bell schedule and A/B-day display on home dashboard
+10. Admin dashboard section + analytics endpoint
+
+## Project structure
+
+```text
+.
+├── backend
+│   ├── src
+│   │   ├── config/env.ts
+│   │   ├── middleware/auth.ts
+│   │   ├── routes/index.ts
+│   │   ├── services/data.ts
+│   │   ├── services/supabase.ts
+│   │   └── server.ts
+│   ├── supabase
+│   │   ├── schema.sql
+│   │   └── seed.sql
+│   ├── .env.example
+│   ├── package.json
+│   └── tsconfig.json
+├── frontend
+│   ├── src
+│   │   ├── components
+│   │   ├── context
+│   │   ├── lib
+│   │   ├── pages
+│   │   ├── styles
+│   │   ├── types
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── index.html
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
+└── package.json
+```
+
+## API routes
+
+Base URL: `http://localhost:4000/api`
+
+- `GET /health` - API health
+- `GET /dashboard` - bundled home data (`restrooms`, `clubs`, `news`)
+- `POST /restrooms/ratings` - submit restroom report (**requires** `x-student-email: <name@school.edu>`)
+- `GET /safety-guides` - drill instructions
+- `GET /map/locations` - map points
+- `GET /forum/threads` - forum thread list
+- `GET /admin/analytics` - moderation/admin metrics
+
+## Supabase setup
+
+1. Create a new Supabase project.
+2. In Supabase SQL editor, run:
+   - `backend/supabase/schema.sql`
+   - `backend/supabase/seed.sql`
+3. Copy `backend/.env.example` to `backend/.env` and fill credentials.
+
+## Local development
+
+```bash
+npm install
+npm run dev
+```
+
+This runs:
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:4000`
+
+## Build
 
 ```bash
 npm install

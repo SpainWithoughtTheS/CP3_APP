@@ -15,7 +15,7 @@ export async function requireAuth(request: Request, response: Response, next: Ne
   }
 
   const token = authorization.replace('Bearer ', '').trim();
-
+https://github.com/SpainWithoughtTheS/CP3_APP/pull/4/conflict?name=backend%252Fsrc%252Froutes%252Findex.ts&base_oid=eac5f9b8beeff9f80a97cbf13f048146f6580ab1&head_oid=180f62ac9b5047dc6cbf713c7ae909b5c010adf9
   const { data, error } = await supabaseAuthClient.auth.getUser(token);
 
   if (error || !data.user) {
