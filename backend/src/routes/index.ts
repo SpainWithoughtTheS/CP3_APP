@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
 import { db } from '../services/data.js';
-import { mockStudentAuth } from '../middleware/auth.js';
+import { requireAuth } from '../middleware/auth.js';
 
 const ratingSchema = z.object({
   building: z.string().min(1),
@@ -18,8 +18,10 @@ const ratingSchema = z.object({
 
 export const apiRouter = Router();
 
-apiRouter.get('/health', (_request, response) => {
-  response.json({ status: 'ok', service: 'campusconnect-api' });
+apiRouter.use(requireAuth);
+
+apiRouter.get('/health', (request, response) => {
+  response.json({ status: 'ok', service: 'campusconnect-api', user: request.user });
 });
 
 apiRouter.get('/dashboard', (_request, response) => {
@@ -30,14 +32,19 @@ apiRouter.get('/dashboard', (_request, response) => {
   });
 });
 
-apiRouter.post('/restrooms/ratings', mockStudentAuth, (request, response) => {
+apiRouter.post('/restrooms/ratings', (request, response) => {
   const parsed = ratingSchema.safeParse(request.body);
   if (!parsed.success) {
     response.status(400).json({ errors: parsed.error.flatten() });
     return;
   }
 
-  const entry = { id: randomUUID(), ...parsed.data, createdAt: new Date().toISOString() };
+  const entry = {
+    id: randomUUID(),
+    ...parsed.data,
+    submittedBy: request.user?.email ?? 'unknown',
+    createdAt: new Date().toISOString()
+  };
   db.restrooms.unshift(entry);
   response.status(201).json(entry);
 });

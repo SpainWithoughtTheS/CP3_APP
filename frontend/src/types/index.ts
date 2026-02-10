@@ -11,6 +11,7 @@ export interface RestroomRating {
   status: RestroomStatus;
   comment: string;
   photoUrl?: string;
+  submittedBy?: string;
   createdAt: string;
 }
 

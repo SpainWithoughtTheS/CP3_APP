@@ -6,22 +6,27 @@ export function RestroomsPage() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setMessage('');
     const form = new FormData(event.currentTarget);
 
-    await api.submitRestroomRating({
-      building: String(form.get('building')),
-      floor: String(form.get('floor')),
-      cleanliness: Number(form.get('cleanliness')),
-      smell: Number(form.get('smell')),
-      supplies: Number(form.get('supplies')),
-      maintenance: Number(form.get('maintenance')),
-      status: String(form.get('status')) as 'Clean' | 'Okay' | 'Dirty' | 'Avoid',
-      comment: String(form.get('comment')),
-      photoUrl: String(form.get('photoUrl') || '')
-    });
+    try {
+      await api.submitRestroomRating({
+        building: String(form.get('building')),
+        floor: String(form.get('floor')),
+        cleanliness: Number(form.get('cleanliness')),
+        smell: Number(form.get('smell')),
+        supplies: Number(form.get('supplies')),
+        maintenance: Number(form.get('maintenance')),
+        status: String(form.get('status')) as 'Clean' | 'Okay' | 'Dirty' | 'Avoid',
+        comment: String(form.get('comment')),
+        photoUrl: String(form.get('photoUrl') || '')
+      });
 
-    setMessage('Thanks! Your restroom report has been submitted.');
-    event.currentTarget.reset();
+      setMessage('Thanks! Your restroom report has been submitted.');
+      event.currentTarget.reset();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Unable to submit report.');
+    }
   }
 
   return (
